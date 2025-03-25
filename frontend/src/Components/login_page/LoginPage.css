@@ -1,0 +1,104 @@
+body{
+  background-color: white;
+}
+
+#form-header{
+  margin-top: -20px;
+  margin-left: 760px;
+  text-align: center;
+  color: black;
+}
+
+.design img{
+  height: 700px;
+}
+
+.login-form{
+    height: auto;
+    width: 500px;
+    margin-top: -560px;
+    margin-left: 880px;
+    padding: 40px;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 8px;
+    box-shadow: 6px 7px 15px rgb(149, 156, 155);
+  }
+
+.login-form .label-box{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: large;
+    font-style: italic;
+    font-weight: bold;
+    color: brown;
+    margin-top: 10px;
+  }
+
+.login-form .input-box{
+    width: 90%;
+    position: relative;
+    height: 50px;
+    margin: 5px 5px 30px -14px;
+    padding: 5px;
+}
+
+.input-box input{
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  font-size: 16px;
+  border: 2px solid black;
+}
+
+.input-box .icon {
+  position: absolute;
+  top: 26px;
+  right: 25px;
+  transform: translateY(-50%);
+  font-size: x-large;
+  margin-right: -5px;
+}
+
+.login-form .forgot-password {
+    display: flex;
+    font-size: 14.5px;
+    margin-left: 315px;
+}
+
+.forgot-password .forgot-link {
+    color: rgb(0, 0, 0);    
+    text-decoration: none;
+    font-size: medium;
+}
+
+.forgot-password .forgot-link:hover {
+    text-decoration: double;
+    color: chocolate;
+}
+
+.login-form .register-link {
+    font-size: 16.5px;
+    text-align: center;
+    /* margin-top: 7px; */
+}
+
+.register-link p a {
+    color: brown;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}  
+
+.login-form #button{
+    background-color: green;
+    width: 90%;
+    height: 40px;
+    border-radius: 20px;
+    color: white;
+    position: relative;
+    display: block;
+    margin: 20px auto;
+  }
