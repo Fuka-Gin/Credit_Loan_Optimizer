@@ -1,0 +1,92 @@
+.design-area img{
+  height: 700px;
+}
+
+#form-header{
+  margin-top: 35px;
+  margin-left: -10px;
+  text-align: center;
+  color: black;
+}
+
+.signup-form{
+  height: auto;
+  width: 500px;
+  margin-top: -640px;
+  margin-left: 880px;
+  background-color: white;
+  opacity: 0.8;
+  padding: 10px; 
+  border: 1px solid black;
+  border-radius: 8px;
+  box-shadow: 6px 7px 15px rgb(149, 156, 155);
+}
+
+.signup-form .label-box{
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: large;
+  font-style: italic;
+  font-weight: bold;
+  color: brown;
+  margin-top: 10px;
+}
+
+.signup-form .input-box{
+  width: 80%;
+  position: relative;
+  margin: 7px 5px 10px 7px;
+}
+
+.input-box input{
+  width: 80%;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  font-size: 16px;
+  border: 2px solid black;
+  padding: 12px 63px 12px 20px;
+}
+
+.input-box .icon {
+  position: absolute;
+  top: 25px;
+  right: 48px;
+  transform: translateY(-50%);
+  font-size: x-large;
+}
+
+.signup-form .register-link {
+    font-size: 16.5px;
+    text-align: center;
+    /* margin-top: 7px; */
+}
+
+.register-link p a {
+    color: brown;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: large;
+}  
+
+.signup-form #button{
+  background-color: green;
+  width: 90%;
+  height: 40px;
+  border-radius: 20px;
+  color: white;
+  position: relative;
+  display: block;
+  margin: 20px auto;
+}
+
+#button:hover{
+  background-color: rgb(8, 178, 8);
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: large;
+}
