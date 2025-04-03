@@ -7,7 +7,7 @@ const AboutPage = () => {
         <div>
             <nav className="navbar-section">
                 <div className="brand">
-                    <h2>Credit Loan</h2>
+                    <h2>FinisCredo</h2>
                 </div>
                 <div className="links" style={ {marginLeft: '650px'} }>
                     <Link to='/'>Home</Link>

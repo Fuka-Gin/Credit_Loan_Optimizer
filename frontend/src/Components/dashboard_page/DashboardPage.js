@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import './DashboardPage.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaPlus } from "react-icons/fa6";
+import NewDebt from './NewDebt';
 
 const DashboardPage = () => {
     const navigate = useNavigate();
-    const [userEmail, setUserEmail] = useState(""); //Contains current logged-in user's email
     const [username, setUsername] = useState("");
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const DashboardPage = () => {
         <div>
             <nav className="navbar-section">
                 <div className="brand">
-                    <h2>Netikos Dimoprasía</h2>
+                    <h2>FinisCredo</h2>
                 </div>
                 <div className="links" style={ {marginLeft: '380px'} }>
                     <Link to="/dashboard" id="active">Dashboard</Link>
@@ -68,12 +69,39 @@ const DashboardPage = () => {
                 </div>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
             </nav>
-            <div className="body-container">
-            {username ? (
-                <p>Welcome, {username}!</p>
-            ) : (
-                <p>Please log in to view your dashboard.</p>
-            )}
+            <div>
+                <div className="welcome-section">
+                    {username ? (
+                        <p>Welcome, {username}!</p>
+                    ) : (
+                        <p>Please log in to view your dashboard.</p>
+                    )}
+                </div>
+                <div className="dashboard-section">
+                    <Link to='/dashboard/new-debt' className='new-button' onClick={() => setShowNewDebt(true)}>New <FaPlus style={{marginLeft: '5px'}}/></Link>
+                    <h3>Dashboard</h3>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Credit Card</th>
+                                <th>Debt Owed</th>
+                                <th>Outstanding Debt</th>
+                                <th>Interest Rate</th>
+                                <th>Repayment Strategy</th>
+                                <th>Estimated Payoff Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Item 1</td>
+                                <td>100</td>
+                                <td>5</td>
+                                <td><button className="edit-button">Edit</button> <button className="delete-button">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div> 
     );
