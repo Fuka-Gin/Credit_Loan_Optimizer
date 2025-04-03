@@ -28,6 +28,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 //Model
 const User_Details = require("./models/User_Details");
+const CreditCard = require("./models/CreditCard");
 
 app.post("/api/signup", async (req, res) => {
     try {
@@ -131,6 +132,59 @@ app.post("/api/logout", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+app.post('/api/newDebt', upload.none(), async (req, res) => {
+    try {
+        const formData = req.body;
+        let existingCard = await CreditCard.findOne({ cardNumber: formData.cardNumber });
+        const debtOwed = parseFloat(formData.debtOwed);
+        
+        const user = await User_Details.findOne({ userID: formData.createdBy });
+        if (!user) return res.status(404).json({ error: "User not found" });
+        if (existingCard) {
+            // Update existing debt owed
+            // const DebtAmount =  existingCard.debtOwed + debtOwed;
+            // const newDebt = new CreditCard({
+            //     ...formData,
+            //     CreatedBy: user.userID,
+            //     debtOwed: DebtAmount,
+            // })
+            // await newDebt.save();
+            existingCard.debtOwed += debtOwed;
+            await existingCard.save();
+            res.status(200).json({ message: "Debt updated successfully!" });
+        } else {
+            // Create new credit card entry
+            const creditCard = new CreditCard(formData);
+            await creditCard.save();
+            res.status(201).json({ message: "Credit card debt added successfully!" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Failed to add credit card debt", details: error });
+    }
+});
+
+app.post("/api/addDebt", async (req, res) => {
+    try {
+        const newDebt = new CreditCard(req.body);
+        await newDebt.save();
+        res.status(201).json({ message: "Debt record added successfully!" });
+    } catch (error) {
+        console.error("Error saving debt record:", error);
+        res.status(500).json({ error: "Failed to add debt record" });
+    }
+});
+
+// API Route to Get All Credit Card Data
+app.get("/api/credit-cards", async (req, res) => {
+    try {
+        const creditCards = await CreditCard.find();
+        res.status(200).json(creditCards);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch credit card data", details: error });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server started on port http://localhost:${PORT}`);

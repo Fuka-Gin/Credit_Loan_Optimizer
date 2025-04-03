@@ -1,0 +1,44 @@
+.debt-form{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 30px 10px 0px 380px;
+    width: 50%;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: aqua;
+}
+
+.info-label{
+    font-size: 20px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.info-input{
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #000000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.info-input:focus{
+    outline: none;
+    border: 2px solid #000000;
+}
+
+.submit-button{
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid green;
+    background-color: white;
+    color: green;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.submit-button:hover{
+    background-color: green;
+    color: white;
+}
