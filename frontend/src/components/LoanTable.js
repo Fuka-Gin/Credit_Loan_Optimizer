@@ -1,95 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 
-const LoanTable = ({ loanData }) => {
-  const { salary, months, cards } = loanData;
+const LoanTable = () => {
+  const [salary, setSalary] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [loanPeriod, setLoanPeriod] = useState("");
+  const [tableData, setTableData] = useState([]);
 
-  const calculatePayments = (method) => {
-    let sortedCards = [...cards];
-    if (method === "Snowball") {
-      sortedCards.sort((a, b) => a.balance - b.balance);
-    } else {
-      sortedCards.sort((a, b) => b.interest - a.interest);
-    }
+  const calculateEMI = () => {
+    const r = parseFloat(interestRate) / 100 / 12;
+    const n = parseInt(loanPeriod) * 12;
+    const P = parseFloat(loanAmount);
+    const EMI = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    
+    let remaining = P;
+    let salaryLeft = parseFloat(salary);
+    let rows = [];
 
-    let monthlySalary = salary;
-    let loanRecords = [];
+    for (let i = 1; i <= n; i++) {
+      const interest = remaining * r;
+      const principal = EMI - interest;
+      remaining -= principal;
+      salaryLeft -= EMI;
 
-    for (let month = 1; month <= months; month++) {
-      let remainingSalary = monthlySalary;
-      let clearedLoans = 0;
-
-      sortedCards = sortedCards.map((card) => {
-        if (card.balance > 0 && remainingSalary > 0) {
-          let payment = Math.min(remainingSalary, card.balance);
-          card.balance -= payment;
-          remainingSalary -= payment;
-          clearedLoans += payment;
-        }
-        return card;
-      });
-
-      loanRecords.push({
-        month,
-        salary: monthlySalary,
-        clearedLoans,
-        remainingSalary,
-        remainingLoans: sortedCards.map((card) => ({
-          name: card.name,
-          balance: card.balance.toFixed(2),
-        })),
+      rows.push({
+        month: i,
+        emi: EMI.toFixed(2),
+        principal: principal.toFixed(2),
+        interest: interest.toFixed(2),
+        remaining: remaining.toFixed(2),
+        salaryLeft: salaryLeft.toFixed(2)
       });
     }
-    return loanRecords;
+
+    setTableData(rows);
   };
 
-  const snowballData = calculatePayments("Snowball");
-  const avalancheData = calculatePayments("Avalanche");
-
   return (
-    <div>
-      <h2>Snowball Method</h2>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Salary</th>
-            <th>Loans Cleared</th>
-            <th>Remaining Salary</th>
-            <th>Remaining Loans</th>
-          </tr>
-        </thead>
-        <tbody>
-          {snowballData.map((data) => (
-            <tr key={data.month}>
-              <td>{data.month}</td>
-              <td>{data.salary}</td>
-              <td>{data.clearedLoans}</td>
-              <td>{data.remainingSalary}</td>
-              <td>{data.remainingLoans.map((loan) => `${loan.name}: $${loan.balance}`).join(", ")}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full md:w-[600px] mt-6 md:mt-0">
+      <h2 className="text-2xl font-semibold mb-4">Simple Loan EMI Table</h2>
+      <input placeholder="Monthly Salary" onChange={(e) => setSalary(e.target.value)} className="border p-2 mb-2 w-full" />
+      <input placeholder="Loan Amount" onChange={(e) => setLoanAmount(e.target.value)} className="border p-2 mb-2 w-full" />
+      <input placeholder="Interest Rate (%)" onChange={(e) => setInterestRate(e.target.value)} className="border p-2 mb-2 w-full" />
+      <input placeholder="Loan Term (Years)" onChange={(e) => setLoanPeriod(e.target.value)} className="border p-2 mb-4 w-full" />
+      <button onClick={calculateEMI} className="bg-indigo-500 text-white px-4 py-2 rounded mb-4 w-full">Generate Table</button>
 
-      <h2>Avalanche Method</h2>
-      <table border="1">
-        <thead>
+      <table className="w-full text-sm border">
+        <thead className="bg-gray-300">
           <tr>
-            <th>Month</th>
-            <th>Salary</th>
-            <th>Loans Cleared</th>
-            <th>Remaining Salary</th>
-            <th>Remaining Loans</th>
+            <th className="border p-2">Month</th>
+            <th className="border p-2">EMI</th>
+            <th className="border p-2">Principal</th>
+            <th className="border p-2">Interest</th>
+            <th className="border p-2">Remaining</th>
+            <th className="border p-2">Salary Left</th>
           </tr>
         </thead>
         <tbody>
-          {avalancheData.map((data) => (
-            <tr key={data.month}>
-              <td>{data.month}</td>
-              <td>{data.salary}</td>
-              <td>{data.clearedLoans}</td>
-              <td>{data.remainingSalary}</td>
-              <td>{data.remainingLoans.map((loan) => `${loan.name}: $${loan.balance}`).join(", ")}</td>
+          {tableData.map((row, i) => (
+            <tr key={i}>
+              <td className="border p-2">{row.month}</td>
+              <td className="border p-2">${row.emi}</td>
+              <td className="border p-2">${row.principal}</td>
+              <td className="border p-2">${row.interest}</td>
+              <td className="border p-2">${row.remaining}</td>
+              <td className="border p-2">${row.salaryLeft}</td>
             </tr>
           ))}
         </tbody>
