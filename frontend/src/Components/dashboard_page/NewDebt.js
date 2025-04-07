@@ -96,22 +96,25 @@ const NewDebt = () => {
                 <input type="text" className="info-input" name="cardName" placeholder="Your name in the Credit Card" required />
                 
                 <label htmlFor="cardNumber" className="info-label">Card Number:</label>
-                <input type="number" className="info-input" name="cardNumber" placeholder="16 digit of credit number" 
+                <input type="number" className="info-input" name="cardNumber" placeholder="Enter the 16 digit of credit number" 
                  maxLength="16" pattern="\d{16}" onInput={(e) => {e.target.value = e.target.value.replace(/\D/g, '').slice(0, 16);}} 
                  required />
                 
                 <label htmlFor="cardExpiry" className="info-label">Expiry Date:</label>
-                <input type="month" className="info-input" name="cardExpiry" placeholder="Expiry month and year of Credit Card" required />
+                <input type="month" className="info-input" name="cardExpiry" required />
                 
                 <label htmlFor="creditLimit" className="info-label">Credit Limit:</label>
-                <input type="number" className="info-input" name="creditLimit" placeholder="Credit Limit of Credit Card" required />
+                <input type="number" className="info-input" name="creditLimit" placeholder="Enter the Credit Limit of Credit Card" required />
 
                 <h2>Debt Details</h2>
                 <label htmlFor="debtOwed" className="info-label">Debt Amount:</label>
-                <input type="number" className="info-input" name="debtOwed" placeholder="Debt amount credited to you" required />
+                <input type="number" className="info-input" name="debtOwed" placeholder="Enter the Debt amount credited to you" required />
+                
+                <label htmlFor="outstandingDebt" className="info-label">Outstanding Debt Amount:</label>
+                <input type="number" className="info-input" name="outstandingDebt" placeholder="Enter the remaining amount you need to pay" required />
                 
                 <label htmlFor="interestRate" className="info-label">Interest Rate:</label>
-                <input type="number" className="info-input" name="interestRate" placeholder="Annual Interest rate for the debt" required />
+                <input type="number" className="info-input" name="interestRate" placeholder="Enter the Annual Interest rate for the debt" required />
                 
                 <label htmlFor="minimumPayment" className="info-label">Minimum Payment:</label>
                 <input type="number" className="info-input" name="minimumPayment" placeholder="How much payment needed to pay per month" />

@@ -2,11 +2,13 @@ import React, {useState, useEffect} from 'react';
 import './DashboardPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlus } from "react-icons/fa6";
-import NewDebt from './NewDebt';
+import axios from "axios";
 
 const DashboardPage = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
+    const userId = localStorage.getItem("userId");
+    const [creditCards, setCreditCards] = useState([]);
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("username"); // Get stored username
@@ -14,6 +16,19 @@ const DashboardPage = () => {
             setUsername(storedUsername);
         }
     }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost:5000/api/credit-cards", {
+            params: { userId: userId }  // Ensure loggedInUserId is correctly set
+        })
+            .then(response => {
+                setCreditCards(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }, [userId]);
+
 
     const handleLogout = async () => {
         const userId = localStorage.getItem("userId"); // Get stored user ID
@@ -78,27 +93,33 @@ const DashboardPage = () => {
                     )}
                 </div>
                 <div className="dashboard-section">
-                    <Link to='/dashboard/new-debt' className='new-button' onClick={() => setShowNewDebt(true)}>New <FaPlus style={{marginLeft: '5px'}}/></Link>
+                    <Link to='/dashboard/new-debt' className='new-button'>New <FaPlus style={{marginLeft: '5px'}}/></Link>
                     <h3>Dashboard</h3>
                     <table className="table">
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th>Credit Card</th>
+                                <th>Card Type</th>
                                 <th>Debt Owed</th>
                                 <th>Outstanding Debt</th>
                                 <th>Interest Rate</th>
                                 <th>Repayment Strategy</th>
                                 <th>Estimated Payoff Date</th>
+                                <th>Auto payement mode</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Item 1</td>
-                                <td>100</td>
-                                <td>5</td>
-                                <td><button className="edit-button">Edit</button> <button className="delete-button">Delete</button></td>
-                            </tr>
+                            {creditCards.map((card, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{card.cardType}</td>
+                                    <td>{card.debtOwed}</td>
+                                    <td>{card.outstandingDebt}</td>
+                                    <td>{card.interestRate}%</td>
+                                    <td>{card.paymentStrategy}</td>
+                                    <td>{card.autoPay}</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

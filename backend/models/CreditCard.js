@@ -15,6 +15,7 @@ const creditCardSchema = new mongoose.Schema({
     customPayment: Boolean,
     extraAmount: Number,
     debtOwed: Number,
+    outstandingDebt: Number,
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User_Details" },
     createdAt: { type: Date, default: Date.now }
 });
