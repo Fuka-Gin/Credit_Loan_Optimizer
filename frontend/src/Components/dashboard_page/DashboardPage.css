@@ -11,8 +11,8 @@
 
 .navbar-section .links{
     display: flex;
-    align-items: center;
-    margin: 10px;
+    position: relative;
+    margin-right: 35x;
      
 }
 
