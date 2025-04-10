@@ -163,17 +163,69 @@ app.post('/api/newDebt', upload.none(), async (req, res) => {
         res.status(500).json({ error: "Failed to add credit card debt", details: error });
     }
 });
-
 app.post("/api/addDebt", async (req, res) => {
     try {
-        const newDebt = new CreditCard(req.body);
+        const {
+            cardType,
+            cardIssuer,
+            cardName,
+            cardNumber,
+            cardExpiry,
+            cardLimit,
+            debtOwed,
+            outstandingDebt,
+            interestRate,
+            minimumPayment,
+            paymentDay,
+            paymentStrategy,
+            autoMode,
+            customPayment,
+            extraAmount,
+            createdBy
+        } = req.body;
+
+        const debt = parseFloat(debtOwed);
+        const interest = parseFloat(interestRate) / 100;
+        const monthlyPayment = parseFloat(minimumPayment || 0) + parseFloat(extraAmount || 0);
+
+        if (!monthlyPayment || monthlyPayment <= 0) {
+            return res.status(400).json({ message: "Monthly payment must be greater than zero" });
+        }
+
+        // Calculate estimated months to pay off
+        const monthsToPayOff = Math.ceil(debt / monthlyPayment);
+        const estimatedPayoffDate = new Date();
+        estimatedPayoffDate.setMonth(estimatedPayoffDate.getMonth() + monthsToPayOff);
+
+        const newDebt = new CreditCard({
+            cardType,
+            cardIssuer,
+            cardName,
+            cardNumber,
+            cardExpiry,
+            cardLimit: parseFloat(cardLimit),
+            debtOwed: debt,
+            outstandingDebt: parseFloat(outstandingDebt) || debt,
+            interestRate: parseFloat(interestRate),
+            minimumPayment: parseFloat(minimumPayment),
+            paymentDay: parseInt(paymentDay),
+            paymentStrategy,
+            autoPay: autoMode === "yes",
+            customPayment: customPayment === "yes",
+            extraAmount: parseFloat(extraAmount) || 0,
+            estimatedPayoffDate: estimatedPayoffDate.toISOString().split('T')[0],
+            createdBy
+        });
+
         await newDebt.save();
         res.status(201).json({ message: "Debt record added successfully!" });
+
     } catch (error) {
         console.error("Error saving debt record:", error);
-        res.status(500).json({ error: "Failed to add debt record" });
+        res.status(500).json({ error: "Failed to add debt record", details: error.message });
     }
 });
+
 
 // API Route to Get All Credit Card Data
 app.get("/api/credit-cards", async (req, res) => {
@@ -183,10 +235,12 @@ app.get("/api/credit-cards", async (req, res) => {
     }
     
     try {
+        // In server.js
         const creditCards = await CreditCard.find(
-            { createdBy: userId }, // Fetch only the logged-in user's cards
-            "cardType debtOwed outstandingDebt interestRate paymentStrategy autoPay" // required fields
+        { createdBy: userId },
+        "cardType debtOwed outstandingDebt interestRate paymentStrategy autoPay estimatedPayoffDate"
         ).lean();
+        
 
         res.json(creditCards);
     } catch (error) {
@@ -195,6 +249,22 @@ app.get("/api/credit-cards", async (req, res) => {
     }
 });
 
+// Add this to your server.js
+app.delete("/api/credit-cards/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedCard = await CreditCard.findByIdAndDelete(id);
+        
+        if (!deletedCard) {
+            return res.status(404).json({ message: "Credit card not found" });
+        }
+        
+        res.status(200).json({ message: "Credit card deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting credit card:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 app.listen(PORT, () => {
     console.log(`Server started on port http://localhost:${PORT}`);
 });

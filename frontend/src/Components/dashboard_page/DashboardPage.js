@@ -9,6 +9,9 @@ const DashboardPage = () => {
     const [username, setUsername] = useState("");
     const userId = localStorage.getItem("userId");
     const [creditCards, setCreditCards] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("username"); // Get stored username
@@ -19,16 +22,16 @@ const DashboardPage = () => {
 
     useEffect(() => {
         axios.get("http://localhost:5000/api/credit-cards", {
-            params: { userId: userId }  // Ensure loggedInUserId is correctly set
+            params: { userId: userId }
         })
-            .then(response => {
-                setCreditCards(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
+        .then(response => {
+            console.log("Credit cards data:", response.data); 
+            setCreditCards(response.data);
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
     }, [userId]);
-
 
     const handleLogout = async () => {
         const userId = localStorage.getItem("userId"); // Get stored user ID
@@ -64,6 +67,91 @@ const DashboardPage = () => {
         }
     };
 
+    // In DashboardPage.js
+const generateRepaymentSchedule = (card) => {
+    const monthlyData = [];
+    let debt = parseFloat(card.outstandingDebt);
+    const interestRate = parseFloat(card.interestRate) / 100;
+    const monthlyPayment = debt / 12; // Or use minimumPayment if available
+    
+    let month = 1;
+    let payoffDate = new Date(); // Start from current date
+    
+    while (debt > 0 && month <= 60) { // Max 5 years (60 months)
+        const interest = debt * interestRate / 12;
+        const principalPayment = Math.min(monthlyPayment - interest, debt);
+        const amountPaid = principalPayment + interest;
+        
+        debt = debt - principalPayment;
+        if (debt < 0) debt = 0;
+        
+        // Calculate payoff date for this month
+        const currentMonthDate = new Date(payoffDate);
+        currentMonthDate.setMonth(payoffDate.getMonth() + month - 1);
+        
+        monthlyData.push({
+            month: `Month ${month}`,
+            cardType: card.cardType,
+            paid: amountPaid.toFixed(2),
+            remainingDebt: debt > 0 ? debt.toFixed(2) : "0.00",
+            interest: interest.toFixed(2),
+            payoffDate: debt <= 0 ? currentMonthDate.toLocaleDateString() : null
+        });
+        
+        month++;
+    }
+    
+    return monthlyData;
+};
+
+    // Add this function to your DashboardPage component
+const handleDeleteCard = async (cardId) => {
+    if (window.confirm("Are you sure you want to delete this credit card?")) {
+        try {
+            const response = await axios.delete(
+                `http://localhost:5000/api/credit-cards/${cardId}`
+            );
+            
+            if (response.data.message === "Credit card deleted successfully") {
+                // Update the UI by removing the deleted card
+                setCreditCards(creditCards.filter(card => card._id !== cardId));
+                alert("Credit card deleted successfully!");
+            } else {
+                alert(response.data.message || "Failed to delete credit card");
+            }
+        } catch (error) {
+            console.error("Error deleting credit card:", error);
+            alert(
+                error.response?.data?.message || 
+                error.response?.data?.error || 
+                "Failed to delete credit card. Please try again."
+            );
+        }
+    }
+};
+
+    const calculatePayoffDate = (card) => {
+    if (!card.outstandingDebt || !card.interestRate) return 'N/A';
+    
+    const debt = parseFloat(card.outstandingDebt);
+    const interestRate = parseFloat(card.interestRate) / 100;
+    const monthlyPayment = debt / 12; // Or use minimumPayment if available
+    
+    if (monthlyPayment <= 0) return 'N/A';
+    
+    let months = 0;
+    let remainingDebt = debt;
+    while (remainingDebt > 0 && months < 60) {
+        const interest = remainingDebt * interestRate / 12;
+        const principalPayment = Math.min(monthlyPayment - interest, remainingDebt);
+        remainingDebt -= principalPayment;
+        months++;
+    }
+    
+    const payoffDate = new Date();
+    payoffDate.setMonth(payoffDate.getMonth() + months);
+    return payoffDate.toLocaleDateString();
+};
     return(
         <div>
             <nav className="navbar-section">
@@ -74,14 +162,9 @@ const DashboardPage = () => {
                     <Link to="/dashboard" id="active">Dashboard</Link>
                 </div>
                 <div className="links">
-                    <Link to="/bidding">Show Table</Link>
+                    <Link to="/dashboard/Recommendation">Recommendation</Link>
                 </div>
-                <div className="links">
-                    <Link to="/listing">Recommendation</Link>
-                </div>
-                <div className="links">
-                    <Link to="/listing">Notification</Link>
-                </div>
+
                 <div className="links">
                     <Link to="/profile">My Profile</Link>
                 </div>
@@ -98,33 +181,94 @@ const DashboardPage = () => {
                 <div className="dashboard-section">
                     <Link to='/dashboard/new-debt' className='new-button'>New <FaPlus style={{marginLeft: '5px'}}/></Link>
                     <h3>Dashboard</h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Card Type</th>
-                                <th>Debt Owed</th>
-                                <th>Outstanding Debt</th>
-                                <th>Interest Rate</th>
-                                <th>Repayment Strategy</th>
-                                <th>Estimated Payoff Date</th>
-                                <th>Auto payement mode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {creditCards.map((card, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{card.cardType}</td>
-                                    <td>{card.debtOwed}</td>
-                                    <td>{card.outstandingDebt}</td>
-                                    <td>{card.interestRate}%</td>
-                                    <td>{card.paymentStrategy}</td>
-                                    <td>{card.autoPay}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Card Type</th>
+                                        <th>Debt Owed</th>
+                                        <th>Outstanding Debt</th>
+                                        <th>Interest Rate</th>
+                                        <th>Repayment Strategy</th>
+                                        <th>Estimated Payoff Date</th>
+                                        <th>Auto payment mode</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {creditCards.map((card, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{card.cardType}</td>
+                                            <td>{card.debtOwed || '0'}</td>
+                                            <td>{card.outstandingDebt || card.debtOwed || '0'}</td>
+                                            <td>{card.interestRate}%</td>
+                                            <td>{card.paymentStrategy}</td>
+                                            <td>{card.estimatedPayoffDate ? new Date(card.estimatedPayoffDate).toLocaleDateString() : 'N/A'}</td>
+                                            <td>{card.autoPay ? 'On' : 'Off'}</td>
+                                            <td>
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <button 
+                                                        className="show-table-button" 
+                                                        onClick={() => {
+                                                            setSelectedCard(card);
+                                                            setShowPopup(true);
+                                                        }}
+                                                    >
+                                                        Show Table
+                                                    </button>
+                                                    <button 
+                                                        className="delete-button" 
+                                                        onClick={() => handleDeleteCard(card._id)}
+                                                        style={{
+                                                            backgroundColor: '#ff4444',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            padding: '5px 10px',
+                                                            borderRadius: '4px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                    {showPopup && selectedCard && (
+                        <div className="popup-overlay">
+                            <div className="popup-content">
+                                <h3>Repayment Schedule for {selectedCard.cardType}</h3>
+                                <button className="close-button" onClick={() => setShowPopup(false)}>Close</button>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>Card Type</th>
+                                            <th>Amount Paid</th>
+                                            <th>Remaining Debt</th>
+                                            <th>Interest</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {generateRepaymentSchedule(selectedCard).map((row, index) => (
+                                            <tr key={index}>
+                                                <td>{row.month}</td>
+                                                <td>{row.cardType}</td>
+                                                <td>₹{row.paid}</td>
+                                                <td>₹{row.remainingDebt}</td>
+                                                <td>₹{row.interest}</td>
+                                                <td>{row.payoffDate || '-'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div> 
