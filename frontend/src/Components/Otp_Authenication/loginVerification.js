@@ -6,7 +6,7 @@ const LoginVerify = () => {
     const [userOTP, setUserOTP] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const { mobileNo } = location.state || {}; // Assuming userData is passed in state
+    const { mobileNo, token, userId, username } = location.state || {};
 
     const handleOPT = (e) => {
         const input = (e.target.value);
@@ -18,12 +18,6 @@ const LoginVerify = () => {
     const verify = async (e) => {
         e.preventDefault();
 
-        if (!mobileNo || typeof mobileNo !== "string") {
-            alert("Something went wrong. Mobile number is invalid.");
-            console.error("Invalid mobileNo:", mobileNo);
-            return;
-        }
-
         const formattedMobileNo = mobileNo.startsWith("+91") ? mobileNo : `+91${mobileNo}`;
 
         try {
@@ -32,20 +26,23 @@ const LoginVerify = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ mobileNo: formattedMobileNo, otp: userOTP })
+                body: JSON.stringify({ mobileNo: formattedMobileNo, otp: userOTP, userId })
             });
 
             const data = await res.json();
             if (res.ok) {
+                localStorage.setItem("token", token);
+                localStorage.setItem("userId", userId);
+                localStorage.setItem("username", username); 
                 alert("Login successful!");
-                navigate("/dashboard"); // Redirect to dashboard after successful login
+                navigate("/dashboard");
             } else {
                 alert(data.message || "Invalid OTP. Please try again.");
             }
         } catch (error) {
             console.error("OTP verification error:", error.message);
             alert("Something went wrong. Please try again.");
-        }
+        } 
     };
     
 

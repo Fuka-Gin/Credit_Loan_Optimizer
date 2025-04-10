@@ -53,12 +53,13 @@ const LoginPage = () => {
     
           alert("OTP sent to your mobile number!");
 
-          navigate("/login/authenication", { state: { mobileNo: data.mobileNo } });
+          navigate("/login/authenication", { state: { 
+            mobileNo: data.mobileNo,
+            token: data.token,
+            userId: data.userId,
+            username: data.username
+          }});
           
-          localStorage.setItem("token", data.token); // Store token in localStorage
-          localStorage.setItem("userId", data.userId); // Store userId in localStorage
-          localStorage.setItem("userEmail", email);
-          localStorage.setItem("username", data.username);
         } else {
             alert(data.message); // Show error message
         }

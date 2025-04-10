@@ -7,15 +7,16 @@ const LandingPage = () => {
         <div>
             <nav className="navbar-section">
                 <div className="brand">
-                    <h2>FinisCredo</h2>
+                    <img src="/logo1.png" alt="Logo" className="logo" />
+                    <h2 className='brandName'>FinisCredo</h2>
                 </div>
-                <div className="links" style={ {marginLeft: '650px'} }>
-                    <Link to='/'>Home</Link>
+                <div className="navlinks" style={ {marginLeft: '780px'} }>
+                    <Link to='/' id="active">Home</Link>
                 </div>
-                <div className="links">
+                <div className="navlinks">
                     <Link to='/about'>About</Link>
                 </div>
-                <div className="links">
+                <div className="navlinks">
                     <Link to='/signup' id="signup-button">Sign Up</Link>
                 </div>
             </nav>

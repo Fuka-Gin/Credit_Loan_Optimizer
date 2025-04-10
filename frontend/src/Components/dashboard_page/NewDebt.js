@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const NewDebt = () => {
     const userId = localStorage.getItem("userId");
     const [isCustomPayment, setIsCustomPayment] = useState(false);
+    const navigate = useNavigate();
 
     if (!userId) {
         alert("User is not logged in. Please log in to continue.");
@@ -46,11 +47,12 @@ const NewDebt = () => {
             cardExpiry,
             creditLimit,
             debtOwed,
+            outstandingDebt: e.target.outstandingDebt.value,
             interestRate,
             minimumPayment: e.target.minimumPayment.value,
             paymentDay: e.target.paymentDay.value,
             paymentStrategy: e.target.paymentStrategy.value,
-            autoMode: e.target.AutoMode.value,
+            autoPay: e.target.autoPay.value,
             customPayment: isCustomPayment ? e.target.extraPayment.value : null
         };
 
@@ -67,6 +69,7 @@ const NewDebt = () => {
 
             const data = await response.json();
             alert(data.message);
+            navigate("/dashboard");
         } catch (error) {
             console.error("Error submitting form:", error);
             alert("Failed to submit form. Please try again.");
@@ -135,8 +138,8 @@ const NewDebt = () => {
                     <option value="custom">Custom</option>
                 </select>
                 
-                <label htmlFor="AutoMode" className="info-label">Auto-Pay Enabled:</label>
-                <select className="info-input" name="AutoMode">
+                <label htmlFor="autoPay" className="info-label">Auto-Pay Enabled:</label>
+                <select className="info-input" name="autoPay">
                 <option value="">Select your choice</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>

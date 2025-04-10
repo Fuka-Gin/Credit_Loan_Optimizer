@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import './DashboardPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlus } from "react-icons/fa6";
-import axios from "axios";
 
 const DashboardPage = () => {
     const navigate = useNavigate();
@@ -17,17 +16,22 @@ const DashboardPage = () => {
         }
     }, []);
 
+    console.log("Fetching credit cards for userId:", userId);
+
     useEffect(() => {
-        axios.get("http://localhost:5000/api/credit-cards", {
-            params: { userId: userId }  // Ensure loggedInUserId is correctly set
-        })
-            .then(response => {
-                setCreditCards(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
-    }, [userId]);
+        if (!userId) return;
+
+        fetch(`http://localhost:5000/api/credit-cards?userId=${userId}`).then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch credit cards");
+            }
+            return response.json();
+        }).then(data => { 
+            setCreditCards(data); 
+        }).catch(error => {
+            console.error("Error fetching credit card data:", error);
+        });
+    }, [userId]); 
 
 
     const handleLogout = async () => {
@@ -68,12 +72,13 @@ const DashboardPage = () => {
         <div>
             <nav className="navbar-section">
                 <div className="brand">
-                    <h2>FinisCredo</h2>
+                    <img src="/logo1.png" alt="Logo" className="logo" />
+                    <h2 className='brandName'>FinisCredo</h2>
                 </div>
-                <div className="links" style={ {marginLeft: '380px'} }>
+                <div className="navlinks" style={ {marginLeft: '780px'} }>
                     <Link to="/dashboard" id="active">Dashboard</Link>
                 </div>
-                <div className="links">
+                <div className="navlinks">
                     <Link to="/profile">My Profile</Link>
                 </div>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
@@ -89,29 +94,30 @@ const DashboardPage = () => {
                 <div className="dashboard-section">
                     <Link to='/dashboard/new-debt' className='new-button'>New <FaPlus style={{marginLeft: '5px'}}/></Link>
                     <h3>Dashboard</h3>
-                    <table className="table">
-                        <thead>
+                    <table className="debtTable">
+                        <thead style={{backgroundColor: 'rgb(19, 186, 241)'}}>
                             <tr>
-                                <th>S.No</th>
-                                <th>Card Type</th>
-                                <th>Debt Owed</th>
-                                <th>Outstanding Debt</th>
-                                <th>Interest Rate</th>
-                                <th>Repayment Strategy</th>
-                                <th>Estimated Payoff Date</th>
-                                <th>Auto payement mode</th>
+                                <th className='tableHeader'>S.No</th>
+                                <th className='tableHeader'>Card Type</th>
+                                <th className='tableHeader'>Debt Owed</th>
+                                <th className='tableHeader'>Outstanding Debt</th>
+                                <th className='tableHeader'>Interest Rate</th>
+                                <th className='tableHeader'>Repayment Strategy</th>
+                                <th className='tableHeader'>Estimated Payoff Date</th>
+                                <th className='tableHeader'>Auto payement mode</th>
                             </tr>
                         </thead>
                         <tbody>
                             {creditCards.map((card, index) => (
                                 <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{card.cardType}</td>
-                                    <td>{card.debtOwed}</td>
-                                    <td>{card.outstandingDebt}</td>
-                                    <td>{card.interestRate}%</td>
-                                    <td>{card.paymentStrategy}</td>
-                                    <td>{card.autoPay}</td>
+                                    <td className='tableBody'>{index + 1}</td>
+                                    <td className='tableBody'>{card.cardType}</td>
+                                    <td className='tableBody'>{card.debtOwed}</td>
+                                    <td className='tableBody'>{card.outstandingDebt}</td>
+                                    <td className='tableBody'>{card.interestRate}%</td>
+                                    <td className='tableBody'>{card.paymentStrategy}</td>
+                                    <td className='tableBody'>{card.autoPay}</td>
+                                    <td className='tableBody'>{card.autoPay}</td>
                                 </tr>
                             ))}
                         </tbody>

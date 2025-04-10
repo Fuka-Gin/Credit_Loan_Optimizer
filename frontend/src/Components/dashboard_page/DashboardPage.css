@@ -9,14 +9,31 @@
     margin: 10px 80px;
 }
 
-.navbar-section .links{
+.navbar-section .navlinks{
     display: flex;
     align-items: center;
     margin: 10px;
      
 }
 
-.links a{
+.logo{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    position: absolute;
+    left: 10px;
+    top: 8px;
+}
+
+.brandName{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+    font-weight: 550;
+    color: black;
+    margin-top: 10px;
+}
+
+.navlinks a{
     text-decoration: none;
     color: rgb(89, 89, 89);
     margin: 0 20px;
@@ -26,7 +43,7 @@
     padding: 10px;
 }
 
-.links a:hover{
+.navlinks a:hover{
     color: gray;
     background-color: rgb(168, 222, 215);
     border-radius: 20px;
@@ -116,4 +133,37 @@
     height: 40px;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.debtTable{ 
+    margin-top: 20px;
+    width: 100%;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.tableHeader{
+    color: white;
+    font-size: large;
+    font-weight: 500;
+    padding: 10px;
+    text-align: center;
+}
+
+.debtTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+    padding: 10px;
+    text-align: center;
+    font-weight: 400;
+    height: 50px;
+}
+
+.debtTable tbody tr:nth-child(odd) {
+    background-color: #c9c8c8;
+    padding: 10px;
+    text-align: center;
+    font-weight: 400;
+    height: 50px;
 }

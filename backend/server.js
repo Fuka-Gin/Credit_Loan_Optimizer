@@ -76,7 +76,6 @@ app.post("/api/login", async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
 
-        await User_Details.updateOne({ email }, { $set: { isActive: true } });
         // Generate JWT Token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
@@ -118,10 +117,6 @@ app.post("/api/verifyOTP", async (req, res) => {
     if (!mobileNo || !otp) {
         return res.status(400).json({ message: "Phone number and OTP is required" });
     }
-
-    console.log("Type of mobileNo:", typeof mobileNo); // should be "string"
-    console.log("Raw mobileNo:", mobileNo);
-
 
     const storedOTP = optStore[mobileNo];
     console.log("Verifying OTP for", mobileNo, "with input:", otp);
@@ -185,37 +180,6 @@ app.post("/api/logout", async (req, res) => {
     } catch (error) {
         console.error("Logout error:", error);
         res.status(500).json({ message: "Internal server error" });
-    }
-});
-
-app.post('/api/newDebt', upload.none(), async (req, res) => {
-    try {
-        const formData = req.body;
-        let existingCard = await CreditCard.findOne({ cardNumber: formData.cardNumber });
-        const debtOwed = parseFloat(formData.debtOwed);
-        
-        const user = await User_Details.findOne({ userID: formData.createdBy });
-        if (!user) return res.status(404).json({ error: "User not found" });
-        if (existingCard) {
-            // Update existing debt owed
-            // const DebtAmount =  existingCard.debtOwed + debtOwed;
-            // const newDebt = new CreditCard({
-            //     ...formData,
-            //     CreatedBy: user.userID,
-            //     debtOwed: DebtAmount,
-            // })
-            // await newDebt.save();
-            existingCard.debtOwed += debtOwed;
-            await existingCard.save();
-            res.status(200).json({ message: "Debt updated successfully!" });
-        } else {
-            // Create new credit card entry
-            const creditCard = new CreditCard(formData);
-            await creditCard.save();
-            res.status(201).json({ message: "Credit card debt added successfully!" });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Failed to add credit card debt", details: error });
     }
 });
 
