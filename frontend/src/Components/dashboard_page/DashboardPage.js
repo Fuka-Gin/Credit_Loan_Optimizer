@@ -12,7 +12,7 @@ const DashboardPage = () => {
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("username"); // Get stored username
-        if(storedUsername){
+        if(storedUsername){ 
             setUsername(storedUsername); 
         }
     }, []);
