@@ -13,7 +13,7 @@ const DashboardPage = () => {
     useEffect(() => {
         const storedUsername = localStorage.getItem("username"); // Get stored username
         if(storedUsername){
-            setUsername(storedUsername);
+            setUsername(storedUsername); 
         }
     }, []);
 
@@ -72,12 +72,6 @@ const DashboardPage = () => {
                 </div>
                 <div className="links" style={ {marginLeft: '380px'} }>
                     <Link to="/dashboard" id="active">Dashboard</Link>
-                </div>
-                <div className="links">
-                    <Link to="/bidding">Bidding</Link>
-                </div>
-                <div className="links">
-                    <Link to="/listing">Listing</Link>
                 </div>
                 <div className="links">
                     <Link to="/profile">My Profile</Link>

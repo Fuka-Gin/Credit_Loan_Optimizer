@@ -6,6 +6,9 @@ import AboutPage from './Components/about-page/AboutPage';
 import DashboardPage from './Components/dashboard_page/DashboardPage';
 import ProfilePage from './Components/profile_page/ProfilePage';
 import NewDebt from './Components/dashboard_page/NewDebt';
+import SignupVerify from './Components/Otp_Authenication/SignupVerification';
+import LoginVerify from './Components/Otp_Authenication/loginVerification';
+
 
 function App() {
   return (
@@ -18,6 +21,8 @@ function App() {
       <Route path= "/profile" element={<ProfilePage />} />
       <Route path="/logout" element={<LandingPage />} />
       <Route path="/dashboard/new-debt" element={<NewDebt />} />
+      <Route path="/signup/authenication" element={<SignupVerify />} />
+      <Route path="/login/authenication" element={<LoginVerify />} />
     </Routes>
   );
 }

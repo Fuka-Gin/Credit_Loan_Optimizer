@@ -38,12 +38,27 @@ const LoginPage = () => {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem("token", data.token); // Store token in localStorage
-            localStorage.setItem("userId", data.userId); // Store userId in localStorage
-            localStorage.setItem("userEmail", email);
-            localStorage.setItem("username", data.username);
-            alert("Login successful!");
-            navigate('/dashboard');
+          const sendOTP = await fetch("http://localhost:5000/api/sendOTP", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ mobileNo: `+91${data.mobileNo}` })  // This assumes login response returns mobileNo
+          });
+
+          if (!sendOTP.ok) {
+            alert("Failed to send OTP. Try again.");
+            return;
+          }
+    
+          alert("OTP sent to your mobile number!");
+
+          navigate("/login/authenication", { state: { mobileNo: data.mobileNo } });
+          
+          localStorage.setItem("token", data.token); // Store token in localStorage
+          localStorage.setItem("userId", data.userId); // Store userId in localStorage
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("username", data.username);
         } else {
             alert(data.message); // Show error message
         }

@@ -87,13 +87,12 @@
 .dashboard-section{
     margin: 20px;
     height: 100%;
-    background-color: salmon;
+    /* background-color: salmon; */
 }
 
 .new-button{
     position: absolute;
     right: 20px;
-    margin-top: 40px;
     margin-right: 40px;
     padding: 10px;
     width: auto;

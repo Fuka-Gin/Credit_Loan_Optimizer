@@ -12,6 +12,8 @@ const SignupPage = () => {
   const [confirmPass, setConfPass] = useState(''); //Contains confirm password value for checking
   const [mobileNo, setPho] = useState(''); //Contains phone no value for checking
   const [email, setEmail] = useState(''); //Contains email value for checking
+  const [userOTP, setUserOTP] = useState(''); //Contains OTP value
+  const [verifyOTP, setVerified] = useState(false); //Contains OTP value for checking
 
   const [passView, setView] = useState(false); //Used to see password
   const [match, setMatch] = useState(true); //Used to check password is correctly being entered
@@ -77,28 +79,20 @@ const SignupPage = () => {
     }
     console.log("Sending data:", userData);
 
-    try {
-      const response = await fetch("http://localhost:5000/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(userData)
-      });
+    const res = await fetch("http://localhost:5000/api/sendOTP", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ mobileNo: `+91${mobileNo}` })
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        setMessage("Signup successful!");
-        localStorage.setItem("token", data.token); // Store token for authentication
-        navigate("/login"); // Redirect to dashboard after signup
-      } else {
-          console.error("Signup error:", data);
-          throw new Error(data.message || "Signup failed");
-      }
-    } catch (error) {
-      console.error("Error:", error.message);
-      setMessage("Something went wrong. Please try again.");
+    if (!res.ok) {
+      throw new Error("Failed to send OTP.");
     }
+
+    // Navigate to OTP verification page with user data
+    navigate("/signup/authenication", { state: { userData } });
   };
 
 
@@ -166,7 +160,7 @@ const SignupPage = () => {
           </div>
         </div>
 
-        <input type="submit" id="button" value="Submit"/>
+        <input type="submit" id="button" value="Next"/>
         <div className='register-link'>
           <p>Already have an account? <Link to='/login'>Login</Link></p>
         </div>
