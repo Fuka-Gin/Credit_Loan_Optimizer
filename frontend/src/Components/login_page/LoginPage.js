@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { BiShow, BiHide } from "react-icons/bi";
-import imagePath from './auction-house-conceptual-background_1284-29710.avif';
+import imagePath from './img1.png';
 import { SiMaildotru } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -107,7 +107,7 @@ const LoginPage = () => {
 
         <input type="submit" id="button" value="Login"/>
         <div className='register-link'>
-          <p>Don't have an account? <Link to='/signup'>Register</Link></p>
+          <p style={{color: 'blue', fontSize: '20px'}}>Don't have an account? <Link to='/signup'>Register</Link></p>
         </div>
       </form>
     </div>
