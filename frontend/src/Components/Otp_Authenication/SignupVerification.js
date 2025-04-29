@@ -55,10 +55,8 @@ const SignupVerify = () => {
 
     return(
         <div>
-            <h1>OTP Verification</h1>
             <form className="OTPform" onSubmit={verify}>
-                <h6>OTP has been sent to your registered mobile no</h6>
-
+                <h6 className="headLine">OTP Authenication</h6>
                 <div className='labelBox'>
                     <label htmlFor="otp">Enter the OTP</label>
                 </div>

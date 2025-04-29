@@ -10,8 +10,8 @@ body{
 }
 
 .design img{
-  width: 1536px;
   height: 742px;
+  width: 1536px;
 }
 
 .login-form{
@@ -21,7 +21,11 @@ body{
     margin-left: 530px;
     padding: 40px;
     background-color: white;
-    border-radius: 8px;
+    opacity: 0.9;
+    padding: 10px; 
+    border: 1px solid black;
+    border-radius: 20px;
+    border-radius: 20px;
     box-shadow: 6px 7px 15px rgb(149, 156, 155);
   }
 
@@ -30,30 +34,31 @@ body{
     font-size: large;
     font-style: italic;
     font-weight: bold;
-    color: white;
+    color: brown;
     margin-top: 10px;
   }
 
-.login-form .input-box{
-    width: 90%;
+.login-form .inputBox{
+    width: 80%;
     position: relative;
     height: 50px;
     margin: 5px 5px 30px -14px;
-    padding: 5px;
 }
 
-.input-box input{
-  border: none;
+.inputBox input{
+  width: 80%;
+  margin-left: 30px;
   outline: none;
   border-radius: 40px;
   font-size: 16px;
   border: 2px solid black;
+  padding: 12px 63px 12px 20px;
 }
 
-.input-box .icon {
+.inputBox .icon {
   position: absolute;
   top: 26px;
-  right: 25px;
+  right: 15px;
   transform: translateY(-50%);
   font-size: x-large;
   margin-right: -5px;
@@ -66,7 +71,7 @@ body{
 }
 
 .forgot-password .forgot-link {
-    color: white;
+    color: black;
     font-weight: 500;    
     text-decoration: none;
     font-size: medium;
@@ -74,7 +79,7 @@ body{
 
 .forgot-password .forgot-link:hover {
     text-decoration: double;
-    color: aqua;
+    color: brown;
     text-decoration: underline;
 }
 

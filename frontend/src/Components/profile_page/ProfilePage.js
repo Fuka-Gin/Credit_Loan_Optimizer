@@ -62,19 +62,13 @@ const ProfilePage = () => {
         <div>
             <nav className="navbar-section">
                 <div className="brand">
-                    <h2>Netikos Dimoprasía</h2>
+                    <img src="/logo1.png" alt="Logo" className="logo" />
+                    <h2 className='brandName'>FinisCredo</h2>
                 </div>
-                <div className="links" style={ {marginLeft: '300px'} }>
+                <div className="navlinks" style={ {marginLeft: '700px'} }>
                     <Link to="/dashboard" >Dashboard</Link>
                 </div>
-                <div className="links">
-                    <Link to="/bidding">Bidding</Link>
-                </div>
-                <form className="search-form">
-                    <input className='search-input' type='search' placeholder='Search' aria-label="Search" />
-                    <button class="search-button" type="submit" style={{marginLeft: '20px'}}>Search</button>
-                </form>
-                <div className="links">
+                <div className="navlinks">
                     <Link to="/profile" id="active">My Profile</Link>
                 </div>
             </nav>

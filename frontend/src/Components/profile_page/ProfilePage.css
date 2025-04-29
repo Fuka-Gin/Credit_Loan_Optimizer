@@ -9,14 +9,14 @@
     margin: 10px 80px;
 }
 
-.navbar-section .links{
+.navbar-section .navlinks{
     display: flex;
     align-items: center;
     margin: 10px;
      
 }
 
-.links a{
+.navlinks a{
     text-decoration: none;
     color: rgb(89, 89, 89);
     margin: 0 20px;
@@ -26,9 +26,9 @@
     padding: 10px;
 }
 
-.links a:hover{
-    color: rgb(0, 0, 0);
-    background-color: rgb(227, 215, 52);
+.navlinks a:hover{
+    color: rgb(92, 90, 90);
+    background-color: rgb(168, 222, 215);
     border-radius: 20px;
     width: auto;
     height: 40px;
@@ -148,6 +148,7 @@
 
 .edit-button, .update-button {
     margin-top: 20px;
+    /* margin-left: 850px; */
     padding: 10px 15px;
     border: none;
     background-color: #007bff;

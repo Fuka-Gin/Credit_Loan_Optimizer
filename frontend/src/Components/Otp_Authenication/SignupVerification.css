@@ -1,9 +1,12 @@
 .OTPform{
     width: 400px;
     height: 250px;
-    background-color: aqua;
+    background-color: coral;
     border-radius: 20px;
     padding: 10px;
+    margin-left: 580px;
+    margin-top: 200px;
+    box-shadow: 0px 0px 20px 0px black;
 }
 
 .OTPform .labelBox{
@@ -11,7 +14,7 @@
     font-size: large;
     font-style: italic;
     font-weight: bold;
-    color: brown;
+    color: white;
     margin-top: 10px;
 }
   
@@ -38,8 +41,8 @@
     border-radius: 20px;
     color: green;
     border: 2px solid green;
-    position: relative;
     margin-top: 10px;
+    margin-left: 18px;
     font-size: large;
     font-weight: bold;
 }
@@ -48,4 +51,15 @@
     background-color: green;
     color: white;
     cursor: pointer;
+}
+
+.headLine{
+    font-family: Poppins, sans-serif;
+    font-size: large;
+    font-style: italic;
+    font-weight: bold;
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+    margin-left: 50px;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { BiShow, BiHide } from "react-icons/bi";
-import imagePath from './img1.png';
+import imagePath from './img.jpg';
 import { SiMaildotru } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -79,7 +79,7 @@ const LoginPage = () => {
           <div className='label-box'>
             <label htmlFor="umail">Email:</label>
           </div>
-          <div className="input-box">
+          <div className="inputBox">
             <input type="text" id="umail" name="umail" placeholder="Enter your mail id" onChange={handleMailId} required />
             <SiMaildotru className='icon'/>
           </div>
@@ -89,7 +89,7 @@ const LoginPage = () => {
           <div className='label-box'>
             <label htmlFor="password">Password:</label>
           </div>
-          <div className="input-box">
+          <div className="inputBox">
             <input type={passView ? 'text' : 'password'} 
               id="password" name="password" placeholder="Enter your password" 
               onChange={handlePassword}
@@ -107,7 +107,7 @@ const LoginPage = () => {
 
         <input type="submit" id="button" value="Login"/>
         <div className='register-link'>
-          <p style={{color: 'blue', fontSize: '20px'}}>Don't have an account? <Link to='/signup'>Register</Link></p>
+          <p>Don't have an account? <Link to='/signup'>Register</Link></p>
         </div>
       </form>
     </div>

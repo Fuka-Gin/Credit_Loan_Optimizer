@@ -1,5 +1,6 @@
 .design-area img{
-  height: 700px;
+  height: 742px;
+  width: 1536px;
 }
 
 #form-header{
@@ -13,12 +14,12 @@
   height: auto;
   width: 500px;
   margin-top: -640px;
-  margin-left: 880px;
+  margin-left: 560px;
   background-color: white;
   opacity: 0.8;
   padding: 10px; 
   border: 1px solid black;
-  border-radius: 8px;
+  border-radius: 20px;
   box-shadow: 6px 7px 15px rgb(149, 156, 155);
 }
 

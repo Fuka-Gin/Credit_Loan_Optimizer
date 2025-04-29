@@ -4,7 +4,7 @@ import { SiMaildotru } from "react-icons/si";
 import './SignupPage.css';
 import { FaUser, FaMobile } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import imagePath from './auction-house-conceptual-background_1284-29710.avif';
+import imagePath from './img.jpg';
 
 const SignupPage = () => {
   const [username, setUsername] = useState(''); //Contains username value
@@ -96,7 +96,7 @@ const SignupPage = () => {
   };
 
 
-  return (
+  return ( 
     <div className="App">
       <div className='design-area'>
         <img src={imagePath} />
