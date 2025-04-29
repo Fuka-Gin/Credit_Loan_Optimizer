@@ -8,6 +8,8 @@ const DashboardPage = () => {
     const [username, setUsername] = useState("");
     const userId = localStorage.getItem("userId");
     const [creditCards, setCreditCards] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("username"); // Get stored username
@@ -68,6 +70,95 @@ const DashboardPage = () => {
         }
     };
 
+    const generateRepaymentSchedule = (card) => {
+        const monthlyData = [];
+        let debt = parseFloat(card.outstandingDebt);
+        const interestRate = parseFloat(card.interestRate) / 100;
+        const monthlyPayment = debt / 12; // Or use minimumPayment if available
+        
+        let month = 1;
+        let payoffDate = new Date(); // Start from current date
+        
+        while (debt > 0 && month <= 60) { // Max 5 years (60 months)
+            const interest = debt * interestRate / 12;
+            const principalPayment = Math.min(monthlyPayment - interest, debt);
+            const amountPaid = principalPayment + interest;
+            
+            debt = debt - principalPayment;
+            if (debt < 0) debt = 0;
+            
+            // Calculate payoff date for this month
+            const currentMonthDate = new Date(payoffDate);
+            currentMonthDate.setMonth(payoffDate.getMonth() + month - 1);
+            
+            monthlyData.push({
+                month: `Month ${month}`,
+                cardType: card.cardType,
+                paid: amountPaid.toFixed(2),
+                remainingDebt: debt > 0 ? debt.toFixed(2) : "0.00",
+                interest: interest.toFixed(2),
+                payoffDate: debt <= 0 ? currentMonthDate.toLocaleDateString() : null
+            });
+            
+            month++;
+        }
+        
+        return monthlyData;
+    };
+
+    const handleDeleteCard = async (cardId) => {
+        if (window.confirm("Are you sure you want to delete this credit card?")) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/credit-cards/${cardId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                const data = await response.json();
+                
+                if (response. ok && data.message === "Credit card deleted successfully") {
+                    // Update the UI by removing the deleted card
+                    setCreditCards(creditCards.filter(card => card._id !== cardId));
+                    alert("Credit card deleted successfully!");
+                } else {
+                    alert(data.message || "Failed to delete credit card");
+                }
+            } catch (error) {
+                console.error("Error deleting credit card:", error);
+                alert(
+                    error.data?.message || 
+                    error.data?.error || 
+                    "Failed to delete credit card. Please try again."
+                );
+            }
+        }
+    };
+
+    const calculatePayoffDate = (card) => {
+        if (!card.outstandingDebt || !card.interestRate) return 'N/A';
+        
+        const debt = parseFloat(card.outstandingDebt);
+        const interestRate = parseFloat(card.interestRate) / 100;
+        const monthlyPayment = debt / 12; // Or use minimumPayment if available
+        
+        if (monthlyPayment <= 0) return 'N/A';
+        
+        let months = 0;
+        let remainingDebt = debt;
+        while (remainingDebt > 0 && months < 60) {
+            const interest = remainingDebt * interestRate / 12;
+            const principalPayment = Math.min(monthlyPayment - interest, remainingDebt);
+            remainingDebt -= principalPayment;
+            months++;
+        }
+        
+        const payoffDate = new Date();
+        payoffDate.setMonth(payoffDate.getMonth() + months);
+        return payoffDate.toLocaleDateString();
+    };
+
     return(
         <div>
             <nav className="navbar-section">
@@ -75,12 +166,30 @@ const DashboardPage = () => {
                     <img src="/logo1.png" alt="Logo" className="logo" />
                     <h2 className='brandName'>FinisCredo</h2>
                 </div>
-                <div className="navlinks" style={ {marginLeft: '780px'} }>
+                <div className="navlinks" style={ {marginLeft: '540px'} }>
                     <Link to="/dashboard" id="active">Dashboard</Link>
+                </div>
+                <div className="navlinks">
+                    <Link to="/dashboard/Recommendation">Recommendation</Link>
                 </div>
                 <div className="navlinks">
                     <Link to="/profile">My Profile</Link>
                 </div>
+
+                <div className="due-alerts">
+                    {creditCards.map((card, index) => {
+                        const today = new Date();
+                        const dueDate = new Date(today.getFullYear(), today.getMonth(), card.paymentDay);
+                        const isDueSoon = dueDate >= today && dueDate <= new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+                        return isDueSoon ? (
+                            <span key={index} className="due-message">
+                                {card.cardType} bill due on {dueDate.toDateString()}
+                            </span>
+                        ) : null;
+                    })}
+                </div>
+
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
             </nav>
             <div>
@@ -105,6 +214,7 @@ const DashboardPage = () => {
                                 <th className='tableHeader'>Repayment Strategy</th>
                                 <th className='tableHeader'>Estimated Payoff Date</th>
                                 <th className='tableHeader'>Auto payement mode</th>
+                                <th className='tableHeader'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,16 +222,57 @@ const DashboardPage = () => {
                                 <tr key={index}>
                                     <td className='tableBody'>{index + 1}</td>
                                     <td className='tableBody'>{card.cardType}</td>
-                                    <td className='tableBody'>{card.debtOwed}</td>
-                                    <td className='tableBody'>{card.outstandingDebt}</td>
+                                    <td className='tableBody'>{card.debtOwed || '0'}</td>
+                                    <td className='tableBody'>{card.outstandingDebt || card.debtOwed || '0'}</td>
                                     <td className='tableBody'>{card.interestRate}%</td>
                                     <td className='tableBody'>{card.paymentStrategy}</td>
-                                    <td className='tableBody'>{card.autoPay}</td>
-                                    <td className='tableBody'>{card.autoPay}</td>
+                                    <td className='tableBody'>{card.estimatedPayoffDate ? new Date(card.estimatedPayoffDate).toLocaleDateString() : 'N/A'}</td>
+                                    <td className='tableBody'>{card.autoPay ? 'On' : 'Off'}</td>
+                                    <td >
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button className="show-table-button" onClick={() => {
+                                                setSelectedCard(card);
+                                                setShowPopup(true);
+                                            }}>Show Table</button>
+                                            <button className="delete-button" onClick={() => handleDeleteCard(card._id)}>Delete</button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    {showPopup && selectedCard && (
+                        <div className="popup-overlay">
+                            <div className="popup-content">
+                                <h3>Repayment Schedule for {selectedCard.cardType}</h3>
+                                <button className="close-button" onClick={() => setShowPopup(false)}>Close</button>
+                                <table className="debtTable">
+                                    <thead>
+                                        <tr>
+                                            <th className='showTableHeader'>Month</th>
+                                            <th className='showTableHeader'>Card Type</th>
+                                            <th className='showTableHeader'>Amount Paid</th>
+                                            <th className='showTableHeader'>Remaining Debt</th>
+                                            <th className='showTableHeader'>Interest</th>
+                                            <th className='showTableHeader'>Payoff Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {generateRepaymentSchedule(selectedCard).map((row, index) => (
+                                            <tr key={index}>
+                                                <td className='tableBody'>{row.month}</td>
+                                                <td className='tableBody'>{row.cardType}</td>
+                                                <td className='tableBody'>₹{row.paid}</td>
+                                                <td className='tableBody'>₹{row.remainingDebt}</td>
+                                                <td className='tableBody'>₹{row.interest}</td>
+                                                <td className='tableBody'>{row.payoffDate || '-'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div> 

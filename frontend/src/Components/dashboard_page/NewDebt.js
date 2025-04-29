@@ -77,7 +77,7 @@ const NewDebt = () => {
     };
 
     return(
-        <div>
+        <div className="new-debt-container">
             <form className="debt-form" onSubmit={submitForm}>
                 <h2>Credit Card Details</h2>
                 <label htmlFor="cardType" className="info-label">Card Type:</label>

@@ -214,6 +214,22 @@ app.get("/api/credit-cards", async (req, res) => {
     }
 });
 
+app.delete("/api/credit-cards/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedCard = await CreditCard.findByIdAndDelete(id);
+        
+        if (!deletedCard) {
+            return res.status(404).json({ message: "Credit card not found" });
+        }
+        
+        res.status(200).json({ message: "Credit card deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting credit card:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server started on port http://localhost:${PORT}`);
 });

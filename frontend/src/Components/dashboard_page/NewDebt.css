@@ -1,3 +1,9 @@
+.new-debt-container{
+    background-image: url("./add_credit_info.png");
+    background-position: center;
+    background-repeat: no-repeat;
+}   
+
 .debt-form{
     display: flex;
     flex-direction: column;
@@ -6,7 +12,8 @@
     width: 50%;
     padding: 20px;
     border-radius: 20px;
-    background-color: aqua;
+    background-color: whitesmoke;
+    opacity: 0.9;
 }
 
 .info-label{

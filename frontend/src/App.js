@@ -8,6 +8,7 @@ import ProfilePage from './Components/profile_page/ProfilePage';
 import NewDebt from './Components/dashboard_page/NewDebt';
 import SignupVerify from './Components/Otp_Authenication/SignupVerification';
 import LoginVerify from './Components/Otp_Authenication/loginVerification';
+import RecommendationPage from './Components/dashboard_page/RecommendationPage';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route path="/dashboard/new-debt" element={<NewDebt />} />
       <Route path="/signup/authenication" element={<SignupVerify />} />
       <Route path="/login/authenication" element={<LoginVerify />} />
+      <Route path="/dashboard/Recommendation" element={<RecommendationPage />} />
     </Routes>
   );
 }
