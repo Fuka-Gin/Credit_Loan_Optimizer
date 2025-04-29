@@ -158,18 +158,31 @@ const handleDeleteCard = async (cardId) => {
                 <div className="brand">
                     <h2>FinisCredo</h2>
                 </div>
-                <div className="links" style={ {marginLeft: '380px'} }>
+                <div className="links" style={{ marginLeft: '380px' }}>
                     <Link to="/dashboard" id="active">Dashboard</Link>
                 </div>
                 <div className="links">
                     <Link to="/dashboard/Recommendation">Recommendation</Link>
                 </div>
-
                 <div className="links">
                     <Link to="/profile">My Profile</Link>
                 </div>
+                <div className="due-alerts">
+                    {creditCards.map((card, index) => {
+                        const today = new Date();
+                        const dueDate = new Date(today.getFullYear(), today.getMonth(), card.paymentDay);
+                        const isDueSoon = dueDate >= today && dueDate <= new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+                        return isDueSoon ? (
+                            <span key={index} className="due-message">
+                                {card.cardType} bill due on {dueDate.toDateString()}
+                            </span>
+                        ) : null;
+                    })}
+                </div>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
             </nav>
+
             <div>
                 <div className="welcome-section">
                     {username ? (

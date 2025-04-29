@@ -141,3 +141,22 @@
     display: flex;
     gap: 8px;
 }
+.due-alerts {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
+    max-width: 300px;
+    overflow-x: auto;
+}
+
+.due-message {
+    background-color: #ffdddd;
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid red;
+}

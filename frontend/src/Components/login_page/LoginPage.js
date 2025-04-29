@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { BiShow, BiHide } from "react-icons/bi";
-import imagePath from './auction-house-conceptual-background_1284-29710.avif';
+import imagePath from './hsbc card.jpg';
 import { SiMaildotru } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 

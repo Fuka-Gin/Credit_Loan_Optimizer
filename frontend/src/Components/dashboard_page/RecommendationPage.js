@@ -10,7 +10,7 @@ const RecommendationPage = () => {
     "Every step you take today is a step toward a debt-free tomorrow.",
     "Small progress is still progress. Keep going!",
     "You are in control of your finances and your future!",
-    "Debt is just a chapter—not your whole story.",
+    "You spend $200/month on subscriptions. Canceling two could pay off Card X 3 months faster.",
     "Discipline today leads to freedom tomorrow."
   ];
 
